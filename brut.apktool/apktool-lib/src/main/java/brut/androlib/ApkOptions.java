@@ -21,7 +21,7 @@ public class ApkOptions {
     public boolean copyOriginalFiles = false;
     public boolean updateFiles = false;
     public boolean isFramework = false;
-    public boolean resourcesAreCompressed = false;
+//    public boolean resourcesAreCompressed = false;
 
     public String frameworkFolderLocation = null;
     public String frameworkTag = null;

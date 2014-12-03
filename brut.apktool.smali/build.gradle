@@ -31,6 +31,7 @@
 
 apply plugin: 'idea'
 
+group = "brut.apktool.smali"
 version = '2.0.3'
 
 def jarVersion = version

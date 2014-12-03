@@ -88,10 +88,11 @@ public class ApkDecoder {
 
         LOGGER.info("Using Apktool " + Androlib.getVersion() + " on " + mApkFile.getName());
 
+        mUncompressExtensions = getFilesExtensionsStored();
         if (hasResources()) {
             setTargetSdkVersion();
             setAnalysisMode(mAnalysisMode, true);
-            setCompressionMode();
+//            setCompressionMode();
 
             switch (mDecodeResources) {
                 case DECODE_RESOURCES_NONE:
@@ -189,17 +190,17 @@ public class ApkDecoder {
         }
     }
 
-    public void setCompressionMode() throws AndrolibException, IOException {
-        // read the resources.arsc checking for STORED vs DEFLATE
-        // this will determine whether we compress on rebuild or not.
-        ZipExtFile zef = new ZipExtFile(mApkFile.getAbsolutePath());
-        ZipArchiveEntry ze = zef.getEntry("resources.arsc");
-        if (ze != null) {
-            int compression = ze.getMethod();
-            mCompressResources = (compression == ZipEntry.DEFLATED);
-        }
-        zef.close();
-    }
+//    public void setCompressionMode() throws AndrolibException, IOException {
+//        // read the resources.arsc checking for STORED vs DEFLATE
+//        // this will determine whether we compress on rebuild or not.
+//        ZipExtFile zef = new ZipExtFile(mApkFile.getAbsolutePath());
+//        ZipArchiveEntry ze = zef.getEntry("resources.arsc");
+//        if (ze != null) {
+//            int compression = ze.getMethod();
+//            mCompressResources = (compression == ZipEntry.DEFLATED);
+//        }
+//        zef.close();
+//    }
 
     public void setTargetSdkVersion() throws AndrolibException, IOException {
         if (mResTable == null) {
@@ -316,7 +317,8 @@ public class ApkDecoder {
             putSdkInfo(meta);
             putPackageInfo(meta);
             putVersionInfo(meta);
-            putCompressionInfo(meta);
+//            putCompressionInfo(meta);
+            putUncompressExtensions(meta);
         }
         putUnknownInfo(meta);
 
@@ -382,14 +384,107 @@ public class ApkDecoder {
         }
     }
 
-    private void putCompressionInfo(Map<String, Object> meta) throws AndrolibException {
-        meta.put("compressionType", getCompressionType());
-    }
+//    private void putCompressionInfo(Map<String, Object> meta) throws AndrolibException {
+//        meta.put("compressionType", getCompressionType());
+//    }
 
-    private boolean getCompressionType() {
-        return mCompressResources;
-    }
+//    private boolean getCompressionType() {
+//        return mCompressResources;
+//    }
 
+    private void putUncompressExtensions(Map<String, Object> meta)
+    {
+        meta.put("uncompressExtensions", getmUncompressExtensions());
+    }
+    
+    private List<String> getmUncompressExtensions()
+    {
+        return mUncompressExtensions;
+    }
+    
+    private boolean isDefaultExtension(String ext)
+    {
+        boolean hasExtension = false;
+        
+        String noCompressExtArray[] = {
+                ".jpg", ".jpeg", ".png", ".gif",
+                ".wav", ".mp2", ".mp3", ".ogg", ".aac",
+                ".mpg", ".mpeg", ".mid", ".midi", ".smf", ".jet",
+                ".rtttl", ".imy", ".xmf", ".mp4", ".m4a",
+                ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2",
+                ".amr", ".awb", ".wma", ".wmv"
+        };
+        
+        for (String noCompressExt : noCompressExtArray)
+        {
+            if (noCompressExt.equals(ext))
+            {
+                hasExtension = true;
+                break;
+            }
+        }
+        
+        return hasExtension;
+    }
+    
+    private List<String> getFilesExtensionsStored() throws IOException
+    {
+        boolean compressNoExtension = false;
+        
+        boolean hasNoExtensionCompressed = false;
+        
+        Set<String> noCompressExt = new HashSet<String>();
+        
+        ZipExtFile zef = new ZipExtFile(mApkFile.getAbsolutePath());
+        
+        Enumeration<ZipArchiveEntry> allFiles = zef.getEntries();
+        
+        if (allFiles != null) {
+            
+            while (allFiles.hasMoreElements())
+            {
+                ZipArchiveEntry ze = allFiles.nextElement();
+                
+                String[] splitted = ze.getName().split("\\.");
+                
+                if (!ze.isDirectory() && ze.getMethod() == ZipEntry.STORED) // não comprimido
+                {
+                    if (splitted.length > 1) // com extensão
+                    {
+                        String extension = "." + splitted[splitted.length-1];
+                        
+                        if (!isDefaultExtension(extension))
+                        {
+                            noCompressExt.add(extension);
+                        }
+                    } else { // sem extensão
+                        
+                        compressNoExtension = true;
+                        
+                    }
+                } else if (ze.getMethod() == ZipEntry.DEFLATED) //comprimido
+                {
+                    if (splitted.length == 1) { //sem extensão
+                        hasNoExtensionCompressed = true;
+                    }
+                }
+            }
+            
+            if (!hasNoExtensionCompressed) //se tiver arquivos sem extensão comprimidos
+            {
+                if (compressNoExtension) //se tiver arquivos sem extensão não comprimidos
+                {
+                    // não vai comprimir nada
+                    noCompressExt = new HashSet<String>();
+                    noCompressExt.add("");
+                }
+            }
+        }
+        
+        zef.close();
+        
+        return new ArrayList<String>(noCompressExt);
+    }
     private final Androlib mAndrolib;
 
     private final static Logger LOGGER = Logger.getLogger(Androlib.class.getName());
@@ -404,7 +499,8 @@ public class ApkDecoder {
     private boolean mForceDelete = false;
     private boolean mKeepBrokenResources = false;
     private boolean mBakDeb = true;
-    private boolean mCompressResources = false;
+//    private boolean mCompressResources = false;
+    private List<String> mUncompressExtensions;
     private boolean mAnalysisMode = false;
     private int mApi = 15;
 }

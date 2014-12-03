@@ -279,6 +279,10 @@ public class StringBlock {
 
     private String decodeString(int offset, int length) {
         try {
+		    //TODO Tentar verificar mais tipos de encode.
+		    
+		    UTF8_DECODER.onMalformedInput(CodingErrorAction.IGNORE);
+		    UTF16LE_DECODER.onMalformedInput(CodingErrorAction.IGNORE);
             return (m_isUTF8 ? UTF8_DECODER : UTF16LE_DECODER).decode(
                     ByteBuffer.wrap(m_strings, offset, length)).toString();
         } catch (CharacterCodingException ex) {

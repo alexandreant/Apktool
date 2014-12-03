@@ -363,6 +363,11 @@ final public class AndrolibResources {
         }
     }
 
+    public void setUncompressExtensions(List<String> mUncompressExtensions)
+    {
+        this.mUncompressExtensions = mUncompressExtensions;
+    }
+
     public void aaptPackage(File apkFile, File manifest, File resDir, File rawDir, File assetDir, File[] include)
             throws AndrolibException {
 
@@ -452,9 +457,20 @@ final public class AndrolibResources {
             cmd.add("-x");
         }
 
-        if (! apkOptions.resourcesAreCompressed) {
-            cmd.add("-0");
-            cmd.add("arsc");
+        if (mUncompressExtensions != null)
+        {
+            for (String uncompressExtension : mUncompressExtensions)
+            {
+                cmd.add("-0");
+                if (cmd.get(0).contains("aapt.exe") && uncompressExtension.length() == 0)
+                {
+                    cmd.add("''");
+                }
+                else
+                {
+                    cmd.add(uncompressExtension);
+                }
+            }
         }
 
         if (include != null) {
@@ -480,10 +496,10 @@ final public class AndrolibResources {
         }
         try {
             OS.exec(cmd.toArray(new String[0]));
-            if (apkOptions.verbose) {
+//            if (apkOptions.verbose) {
                 LOGGER.info("command ran: ");
                 LOGGER.info(cmd.toString());
-            }
+//            }
         } catch (BrutException ex) {
             throw new AndrolibException(ex);
         }
@@ -818,7 +834,7 @@ final public class AndrolibResources {
     private String mPackageId = null;
 
     private File mAaptBinary = null;
-
+    private List<String> mUncompressExtensions = null;
     private final static String[] IGNORED_PACKAGES = new String[] {
             "android", "com.htc", "miui", "com.lge", "com.lge.internal", "yi" };
 

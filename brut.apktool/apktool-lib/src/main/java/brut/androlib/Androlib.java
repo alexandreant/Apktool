@@ -257,14 +257,15 @@ public class Androlib {
         Map<String, Object> meta = readMetaFile(appDir);
         Object t1 = meta.get("isFrameworkApk");
         apkOptions.isFramework = (t1 == null ? false : (Boolean) t1);
-        apkOptions.resourcesAreCompressed = meta.get("compressionType") == null
-                ? false
-                : Boolean.valueOf(meta.get("compressionType").toString());
+//        apkOptions.resourcesAreCompressed = meta.get("compressionType") == null
+//                ? false
+//                : Boolean.valueOf(meta.get("compressionType").toString());
 
         mAndRes.setSdkInfo((Map<String, String>) meta.get("sdkInfo"));
         mAndRes.setPackageId((Map<String, String>) meta.get("packageInfo"));
         mAndRes.setPackageInfo((Map<String, String>) meta.get("packageInfo"));
         mAndRes.setVersionInfo((Map<String, String>) meta.get("versionInfo"));
+	    mAndRes.setUncompressExtensions((List<String>) meta.get("uncompressExtensions"));
 
         if (outFile == null) {
             String outFileName = (String) meta.get("apkFileName");
