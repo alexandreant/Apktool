@@ -37,27 +37,29 @@ version = '2.0.3'
 def jarVersion = version
 
 if (!('release' in gradle.startParameter.taskNames)) {
-    def versionSuffix
-    try {
-        def git = org.eclipse.jgit.api.Git.open(file('../.'))
-        def head = git.getRepository().getRef("HEAD")
-        versionSuffix = head.getObjectId().abbreviate(8).name()
+//    def versionSuffix
+//    try {
+//        def git = org.eclipse.jgit.api.Git.open(file('../.'))
+//        def head = git.getRepository().getRef("HEAD")
+//        versionSuffix = head.getObjectId().abbreviate(8).name()
+//
+//        if (!git.status().call().clean) {
+//            versionSuffix += '-dirty'
+//        }
+//    } catch (Exception) {
+//        // In case we can't get the commit for some reason,
+//        // just use -dev
+//        versionSuffix = 'dev'
+//    }
+//
+//    def baseVersion = version
+//    version = baseVersion + '-' + versionSuffix
+//
+//    // use something like module-1.2.3-dev.jar for the jar name, rather than the full
+//    // module-1.2.3-001afe02-dirty.jar
+//    jarVersion = baseVersion + '-dev'
 
-        if (!git.status().call().clean) {
-            versionSuffix += '-dirty'
-        }
-    } catch (Exception) {
-        // In case we can't get the commit for some reason,
-        // just use -dev
-        versionSuffix = 'dev'
-    }
-
-    def baseVersion = version
-    version = baseVersion + '-' + versionSuffix
-
-    // use something like module-1.2.3-dev.jar for the jar name, rather than the full
-    // module-1.2.3-001afe02-dirty.jar
-    jarVersion = baseVersion + '-dev'
+    version = jarVersion + "-SNAPSHOT"
 }
 
 subprojects {

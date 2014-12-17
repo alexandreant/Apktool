@@ -18,7 +18,6 @@ import org.apache.tools.ant.filters.*
 apply plugin: "maven"
 
 group = "brut.apktool"
-version = "2.0.0-RC2"
 
 processResources {
   from('src/main/resources/properties') {

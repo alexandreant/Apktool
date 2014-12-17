@@ -28,17 +28,17 @@ allprojects {
 }
 
 if (!('release' in gradle.startParameter.taskNames)) {
-    def hash = getCheckedOutGitCommitHash();
+//    def hash = getCheckedOutGitCommitHash();
 
-    if (hash == null) {
-        project.ext.set("hash", "dirty")
-        project.ext.set("apktool_version", apktoolversion_major + "-dirty")
-        println "Building SNAPSHOT (no .git folder found)";
-    } else {
-        project.ext.set("hash", hash);
-        project.ext.set("apktool_version", apktoolversion_major + "-" + hash + "-SNAPSHOT");
-        println "Building SNAPSHOT (" + getCheckedOutBranch() + "): " + hash;
-    }
+//    if (hash == null) {
+//        project.ext.set("hash", "dirty")
+//        project.ext.set("apktool_version", apktoolversion_major + "-dirty")
+//        println "Building SNAPSHOT (no .git folder found)";
+//    } else {
+        project.ext.set("hash", "SNAPSHOT");
+        project.ext.set("apktool_version", apktoolversion_major + "-" + apktoolversion_minor + "-SNAPSHOT");
+        println "Building SNAPSHOT (" + getCheckedOutBranch() + "): " + apktoolversion_major + "-" + apktoolversion_minor + "-SNAPSHOT";
+//    }
 } else {
     project.ext.set("hash", "")
     project.ext.set("apktool_version", apktoolversion_major + "-" + apktoolversion_minor);
@@ -83,6 +83,8 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'idea'
+
+    version = project.apktool_version
 
     ext {
         depends = [
