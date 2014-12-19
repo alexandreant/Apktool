@@ -37,3 +37,7 @@ dependencies {
 
     testCompile 'junit:junit:4.6'
 }
+
+artifactoryPublish {
+    skip = true
+}

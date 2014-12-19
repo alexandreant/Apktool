@@ -23,6 +23,7 @@ group = "brut.apktool"
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'com.jfrog.artifactory-upload'
     sourceCompatibility = 1.7
     targetCompatibility = 1.7
 }
@@ -76,6 +77,7 @@ buildscript {
     }
     dependencies {
         classpath 'eu.appsatori:gradle-fatjar-plugin:0.3'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.1'
     }
 }
 
@@ -116,6 +118,23 @@ subprojects {
     test {
         testLogging {
             exceptionFormat = 'full'
+        }
+    }
+}
+
+artifactoryPublish {
+
+    println("user: " + artifactory_user + " pass: " + artifactory_password)
+    skip = true
+}
+
+artifactory {
+    publish {
+        repository {
+            contextUrl = "${artifactory_contextUrl}"
+            repoKey = apktool_version.endsWith('SNAPSHOT') ? "${artifactory_repokey_publish_snapshot}" : "${artifactory_repokey_publish}"
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
         }
     }
 }
