@@ -23,7 +23,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertTrue;
 
@@ -64,5 +64,5 @@ public class BuildAndDecodeJarTest {
     private static ExtFile sTestOrigDir;
     private static ExtFile sTestNewDir;
 
-    private final static Logger LOGGER = Logger.getLogger(BuildAndDecodeJarTest.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(BuildAndDecodeJarTest.class.getName());
 }

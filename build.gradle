@@ -17,7 +17,7 @@ apply plugin: 'maven'
 apply from: 'gradle/functions.gradle'
 
 def apktoolversion_major = '2.0.0'
-def apktoolversion_minor = 'RC3';
+def apktoolversion_minor = 'RC4';
 
 group = "brut.apktool"
 
@@ -104,6 +104,9 @@ subprojects {
                 snakeyaml: 'org.yaml:snakeyaml:1.12',
                 xmlpull: 'xpp3:xpp3:1.1.4c',
                 xmlunit: 'xmlunit:xmlunit:1.3',
+                slf4j: 'org.slf4j:slf4j-api:1.7.9',
+                logback_classic: 'ch.qos.logback:logback-classic:1.1.2',
+                logback_core: 'ch.qos.logback:logback-core:1.1.2'
         ]
     }
 
@@ -123,8 +126,6 @@ subprojects {
 }
 
 artifactoryPublish {
-
-    println("user: " + artifactory_user + " pass: " + artifactory_password)
     skip = true
 }
 

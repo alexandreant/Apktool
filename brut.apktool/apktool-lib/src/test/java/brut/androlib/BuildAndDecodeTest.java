@@ -22,7 +22,7 @@ import brut.util.OS;
 import java.io.*;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import org.custommonkey.xmlunit.*;
 import org.junit.*;
@@ -326,5 +326,5 @@ public class BuildAndDecodeTest {
     private static ExtFile sTestOrigDir;
     private static ExtFile sTestNewDir;
 
-    private final static Logger LOGGER = Logger.getLogger(BuildAndDecodeTest.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(BuildAndDecodeTest.class.getName());
 }

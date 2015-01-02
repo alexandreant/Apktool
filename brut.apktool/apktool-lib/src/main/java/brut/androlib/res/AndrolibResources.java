@@ -30,7 +30,7 @@ import brut.directory.*;
 import brut.util.*;
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import java.util.zip.*;
 
 import java.io.File;
@@ -81,11 +81,11 @@ final public class AndrolibResources {
                 break;
             case 2:
                 if (pkgs[0].getName().equals("android")) {
-                    LOGGER.warning("Skipping \"android\" package group");
+                    LOGGER.warn("Skipping \"android\" package group");
                     pkg = pkgs[1];
                     break;
                 } else if (pkgs[0].getName().equals("com.htc")) {
-                    LOGGER.warning("Skipping \"htc\" package group");
+                    LOGGER.warn("Skipping \"htc\" package group");
                     pkg = pkgs[1];
                     break;
                 }
@@ -387,7 +387,7 @@ final public class AndrolibResources {
                     LOGGER.info(aaptFile.getPath() + " being used as aapt location.");
                 }
             } else {
-                LOGGER.warning("aapt location could not be found. Defaulting back to default");
+                LOGGER.warn("aapt location could not be found. Defaulting back to default");
 
                 try {
                     cmd.add(getAaptBinaryFile().getAbsolutePath());
@@ -761,14 +761,14 @@ final public class AndrolibResources {
         File dir = new File(path);
 
         if (dir.getParentFile() != null && dir.getParentFile().isFile()) {
-            System.err.println("Please remove file at " + dir.getParentFile());
+            LOGGER.error("Please remove file at " + dir.getParentFile());
             System.exit(1);
         }
 
         if (! dir.exists()) {
             if (! dir.mkdirs()) {
                 if (apkOptions.frameworkFolderLocation != null) {
-                    System.err.println("Can't create Framework directory: " + dir);
+                    LOGGER.error("Can't create Framework directory: " + dir);
                 }
                 throw new AndrolibException("Can't create directory: " + dir);
             }
@@ -795,7 +795,7 @@ final public class AndrolibResources {
             } else if (OSDetection.isWindows()) {
                 mAaptBinary = Jar.getResourceAsFile("/prebuilt/aapt/windows/aapt.exe");
             } else {
-                LOGGER.warning("Unknown Operating System: " + OSDetection.returnOS());
+                LOGGER.warn("Unknown Operating System: " + OSDetection.returnOS());
                 return null;
             }
         } catch (BrutException ex) {
@@ -805,7 +805,7 @@ final public class AndrolibResources {
             return mAaptBinary;
         }
 
-        System.err.println("Can't set aapt binary as executable");
+        LOGGER.error("Can't set aapt binary as executable");
         throw new AndrolibException("Can't set aapt binary as executable");
     }
 
@@ -822,7 +822,7 @@ final public class AndrolibResources {
     // TODO: dirty static hack. I have to refactor decoding mechanisms.
     public static boolean sKeepBroken = false;
 
-    private final static Logger LOGGER = Logger.getLogger(AndrolibResources.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(AndrolibResources.class.getName());
 
     private String mMinSdkVersion = null;
     private String mMaxSdkVersion = null;

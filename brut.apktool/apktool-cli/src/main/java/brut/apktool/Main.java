@@ -21,20 +21,11 @@ import brut.androlib.err.CantFindFrameworkResException;
 import brut.androlib.err.InFileNotFoundException;
 import brut.androlib.err.OutDirExistsException;
 import brut.common.BrutException;
+import brut.directory.DirectoryException;
+import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.*;
-
-import brut.directory.DirectoryException;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
@@ -67,7 +58,7 @@ public class Main {
         } else if (commandLine.hasOption("-q") || commandLine.hasOption("--quiet")) {
             verbosity = Verbosity.QUIET;
         }
-        setupLogging(verbosity);
+//        setupLogging(verbosity);
 
         // check for advance mode
         if (commandLine.hasOption("advance") || commandLine.hasOption("advanced")) {
@@ -473,57 +464,57 @@ public class Main {
                         + "For smali/baksmali info, see: http://code.google.com/p/smali/");
     }
 
-    private static void setupLogging(Verbosity verbosity) {
-        Logger logger = Logger.getLogger("");
-        for (Handler handler : logger.getHandlers()) {
-            logger.removeHandler(handler);
-        }
-        LogManager.getLogManager().reset();
-
-        if (verbosity == Verbosity.QUIET) {
-            return;
-        }
-
-        Handler handler = new Handler(){
-            @Override
-            public void publish(LogRecord record) {
-                if (getFormatter() == null) {
-                    setFormatter(new SimpleFormatter());
-                }
-
-                try {
-                    String message = getFormatter().format(record);
-                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
-                        System.err.write(message.getBytes());
-                    } else {
-                        System.out.write(message.getBytes());
-                    }
-                } catch (Exception exception) {
-                    reportError(null, exception, ErrorManager.FORMAT_FAILURE);
-                }
-            }
-            @Override
-            public void close() throws SecurityException {}
-            @Override
-            public void flush(){}
-        };
-
-        logger.addHandler(handler);
-
-        if (verbosity == Verbosity.VERBOSE) {
-            handler.setLevel(Level.ALL);
-            logger.setLevel(Level.ALL);
-        } else {
-            handler.setFormatter(new Formatter() {
-                @Override
-                public String format(LogRecord record) {
-                    return record.getLevel().toString().charAt(0) + ": "
-                            + record.getMessage()
-                            + System.getProperty("line.separator");
-                }
-            });
-        }
-    }
+//    private static void setupLogging(Verbosity verbosity) {
+//        Logger logger = LoggerFactory.getLogger("");
+//        for (Handler handler : logger.getHandlers()) {
+//            logger.removeHandler(handler);
+//        }
+//        LogManager.getLogManager().reset();
+//
+//        if (verbosity == Verbosity.QUIET) {
+//            return;
+//        }
+//
+//        Handler handler = new Handler(){
+//            @Override
+//            public void publish(LogRecord record) {
+//                if (getFormatter() == null) {
+//                    setFormatter(new SimpleFormatter());
+//                }
+//
+//                try {
+//                    String message = getFormatter().format(record);
+//                    if (record.getLevel().intValue() >= Level.WARNING.intValue()) {
+//                        System.err.write(message.getBytes());
+//                    } else {
+//                        System.out.write(message.getBytes());
+//                    }
+//                } catch (Exception exception) {
+//                    reportError(null, exception, ErrorManager.FORMAT_FAILURE);
+//                }
+//            }
+//            @Override
+//            public void close() throws SecurityException {}
+//            @Override
+//            public void flush(){}
+//        };
+//
+//        logger.addHandler(handler);
+//
+//        if (verbosity == Verbosity.VERBOSE) {
+//            handler.setLevel(Level.ALL);
+//            logger.setLevel(Level.ALL);
+//        } else {
+//            handler.setFormatter(new Formatter() {
+//                @Override
+//                public String format(LogRecord record) {
+//                    return record.getLevel().toString().charAt(0) + ": "
+//                            + record.getMessage()
+//                            + System.getProperty("line.separator");
+//                }
+//            });
+//        }
+//    }
 
     public static boolean isAdvanceMode() {
         return advanceMode;

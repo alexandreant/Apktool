@@ -22,7 +22,8 @@ import org.jf.smali.main;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
@@ -46,14 +47,14 @@ public class ApktoolProperties {
             sProps.load(in);
             in.close();
         } catch (IOException ex) {
-            LOGGER.warning("Can't load properties.");
+            LOGGER.warn("Can't load properties.");
         }
 
         InputStream templateStream = null;
         try {
             templateStream = baksmali.class.getClassLoader().getResourceAsStream("baksmali.properties");
         } catch(NoClassDefFoundError ex) {
-            LOGGER.warning("Can't load baksmali properties.");
+            LOGGER.warn("Can't load baksmali properties.");
         }
         Properties properties = new Properties();
         String version = "(unknown)";
@@ -71,7 +72,7 @@ public class ApktoolProperties {
         try {
             templateStream = main.class.getClassLoader().getResourceAsStream("smali.properties");
         } catch(NoClassDefFoundError ex) {
-            LOGGER.warning("Can't load smali properties.");
+            LOGGER.warn("Can't load smali properties.");
         }
         properties = new Properties();
         version = "(unknown)";
@@ -88,6 +89,5 @@ public class ApktoolProperties {
 
     private static Properties sProps;
 
-    private static final Logger LOGGER = Logger
-            .getLogger(ApktoolProperties.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApktoolProperties.class.getName());
 }

@@ -18,6 +18,9 @@ group = "brut.j.util"
 
 dependencies {
   compile project(':brut.j.common'),
+          depends.slf4j,
+          depends.logback_classic,
+          depends.logback_core,
           depends.commons_io,
           depends.commons_compress
   testCompile depends.junit

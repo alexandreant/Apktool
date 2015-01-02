@@ -21,6 +21,8 @@ import java.io.*;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
@@ -83,8 +85,11 @@ public class OS {
         try {
             ps = Runtime.getRuntime().exec(cmd);
 
-            new StreamForwarder(ps.getInputStream(), System.err).start();
-            new StreamForwarder(ps.getErrorStream(), System.err).start();
+//            new StreamForwarder(ps.getInputStream(), System.err).start();
+//            new StreamForwarder(ps.getErrorStream(), System.err).start();
+            new SLF4JForwarder(ps.getInputStream(), false).start();
+            new SLF4JForwarder(ps.getErrorStream(), true).start();
+
             if (ps.waitFor() != 0) {
                 throw new BrutException(
                     "could not exec command: " + Arrays.toString(cmd));
@@ -140,5 +145,35 @@ public class OS {
 
         private final InputStream mIn;
         private final OutputStream mOut;
+    }
+
+    static class SLF4JForwarder extends Thread {
+
+        public SLF4JForwarder(InputStream in, boolean isError) {
+            mIn = in;
+            this.isError = isError;
+        }
+
+        @Override
+        public void run() {
+            try {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(mIn));
+                String line;
+                while ((line = in.readLine()) != null) {
+                    if(isError) {
+                        logger.error(line);
+                    } else {
+                        logger.info(line);
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        private final InputStream mIn;
+        private final boolean isError;
+        private final Logger logger = LoggerFactory.getLogger(getClass());
     }
 }

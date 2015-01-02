@@ -27,7 +27,7 @@ import com.mindprod.ledatastream.LEDataInputStream;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import org.apache.commons.io.input.CountingInputStream;
 
 /**
@@ -142,9 +142,9 @@ public class ARSCDecoder {
         if (flags.isInvalid) {
             String resName = mType.getName() + flags.getQualifiers();
             if (mKeepBroken) {
-                LOGGER.warning("Invalid config flags detected: " + resName);
+                LOGGER.warn("Invalid config flags detected: " + resName);
             } else {
-                LOGGER.warning("Invalid config flags detected. Dropping resources: " + resName);
+                LOGGER.warn("Invalid config flags detected. Dropping resources: " + resName);
             }
         }
 
@@ -272,11 +272,11 @@ public class ARSCDecoder {
             BigInteger exceedingBI = new BigInteger(1, buf);
 
             if (exceedingBI.equals(BigInteger.ZERO)) {
-                LOGGER.fine(String
+                LOGGER.debug(String
                         .format("Config flags size > %d, but exceeding bytes are all zero, so it should be ok.",
                                 KNOWN_CONFIG_BYTES));
             } else {
-                LOGGER.warning(String.format("Config flags size > %d. Exceeding bytes: 0x%X.",
+                LOGGER.warn(String.format("Config flags size > %d. Exceeding bytes: 0x%X.",
                         KNOWN_CONFIG_BYTES, exceedingBI));
                 isInvalid = true;
             }
@@ -384,7 +384,7 @@ public class ARSCDecoder {
         }
     }
 
-    private static final Logger LOGGER = Logger.getLogger(ARSCDecoder.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ARSCDecoder.class.getName());
     private static final int KNOWN_CONFIG_BYTES = 38;
 
     public static class ARSCData {

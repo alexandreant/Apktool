@@ -32,7 +32,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import java.util.zip.ZipEntry;
 import java.nio.file.Files;
 import org.yaml.snakeyaml.DumperOptions;
@@ -290,7 +290,7 @@ public class Androlib {
         if (!buildSourcesRaw(appDir, "classes.dex")
                 && !buildSourcesSmali(appDir, "smali", "classes.dex")
                 && !buildSourcesJava(appDir)) {
-            LOGGER.warning("Could not find sources");
+            LOGGER.warn("Could not find sources");
         }
     }
 
@@ -306,7 +306,7 @@ public class Androlib {
                     if (!buildSourcesRaw(appDir, filename)
                             && !buildSourcesSmali(appDir, name, filename)
                             && !buildSourcesJava(appDir)) {
-                        LOGGER.warning("Could not find sources");
+                        LOGGER.warn("Could not find sources");
                     }
                 }
             }
@@ -374,7 +374,7 @@ public class Androlib {
             throws BrutException {
         if (!buildResourcesRaw(appDir) && !buildResourcesFull(appDir, usesFramework)
                 && !buildManifest(appDir, usesFramework)) {
-            LOGGER.warning("Could not find resources");
+            LOGGER.warn("Could not find resources");
         }
     }
 
@@ -491,7 +491,7 @@ public class Androlib {
         } catch (IOException | DirectoryException ex) {
             throw new AndrolibException(ex);
         } catch (AndrolibException ex) {
-            LOGGER.warning("Parse AndroidManifest.xml failed, treat it as raw file.");
+            LOGGER.warn("Parse AndroidManifest.xml failed, treat it as raw file.");
             return buildManifestRaw(appDir);
         }
     }
@@ -691,7 +691,7 @@ public class Androlib {
         return files;
     }
 
-    private final static Logger LOGGER = Logger.getLogger(Androlib.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(Androlib.class.getName());
 
     private final static String SMALI_DIRNAME = "smali";
     private final static String APK_DIRNAME = "build/apk";

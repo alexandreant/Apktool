@@ -24,7 +24,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.io.IOUtils;
@@ -76,7 +76,7 @@ public class SmaliBuilder {
             return;
         }
         if (!fileName.endsWith(".java")) {
-            LOGGER.warning("Unknown file type, ignoring: " + inFile);
+            LOGGER.warn("Unknown file type, ignoring: " + inFile);
             return;
         }
 
@@ -121,5 +121,5 @@ public class SmaliBuilder {
     private final File mDexFile;
     private final boolean mDebug;
 
-    private final static Logger LOGGER = Logger.getLogger(SmaliBuilder.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(SmaliBuilder.class.getName());
 }

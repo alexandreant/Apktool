@@ -52,11 +52,19 @@ task proguard(type: JavaExec, dependsOn: fatJar) {
     args '-dontoptimize'
     args '-keep public class brut.apktool.Main { public static void main(java.lang.String[]); }'
     args '-keep class org.yaml.snakeyaml.** { public protected private *; }'
+    args '-keep public class ch.qos.logback.** { *; }'
+    args '-keep public class org.slf4j.** { *; }'
     args '-keepclassmembers enum * { public static **[] values(); public static ** valueOf(java.lang.String); }'
     args '-dontwarn com.google.common.base.**'
     args '-dontwarn com.google.common.collect.**'
     args '-dontwarn com.google.common.util.**'
     args '-dontwarn javax.xml.xpath.**'
+    args '-dontwarn javax.mail.**'                     //for logback and slf4j
+    args '-dontwarn javax.naming.Context'              //for logback and slf4j
+    args '-dontwarn javax.naming.InitialContext'       //for logback and slf4j
+    args '-dontwarn org.slf4j.**'                      //for logback and slf4j
+    args '-dontwarn ch.qos.logback.**'                 //for logback and slf4j
+    args '-dontwarn javax.xml.stream.events.**'        //for logback and slf4j
     args '-dontnote **'
 }
 

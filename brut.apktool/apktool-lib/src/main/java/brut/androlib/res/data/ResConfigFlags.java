@@ -16,7 +16,7 @@
 
 package brut.androlib.res.data;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
@@ -86,27 +86,27 @@ public class ResConfigFlags {
                           short smallestScreenWidthDp, short screenWidthDp,
                           short screenHeightDp, boolean isInvalid) {
         if (orientation < 0 || orientation > 3) {
-            LOGGER.warning("Invalid orientation value: " + orientation);
+            LOGGER.warn("Invalid orientation value: " + orientation);
             orientation = 0;
             isInvalid = true;
         }
         if (touchscreen < 0 || touchscreen > 3) {
-            LOGGER.warning("Invalid touchscreen value: " + touchscreen);
+            LOGGER.warn("Invalid touchscreen value: " + touchscreen);
             touchscreen = 0;
             isInvalid = true;
         }
         if (density < -1) {
-            LOGGER.warning("Invalid density value: " + density);
+            LOGGER.warn("Invalid density value: " + density);
             density = 0;
             isInvalid = true;
         }
         if (keyboard < 0 || keyboard > 3) {
-            LOGGER.warning("Invalid keyboard value: " + keyboard);
+            LOGGER.warn("Invalid keyboard value: " + keyboard);
             keyboard = 0;
             isInvalid = true;
         }
         if (navigation < 0 || navigation > 4) {
-            LOGGER.warning("Invalid navigation value: " + navigation);
+            LOGGER.warn("Invalid navigation value: " + navigation);
             navigation = 0;
             isInvalid = true;
         }
@@ -501,5 +501,5 @@ public class ResConfigFlags {
     public final static byte UI_MODE_NIGHT_NO = 0x10;
     public final static byte UI_MODE_NIGHT_YES = 0x20;
 
-    private static final Logger LOGGER = Logger.getLogger(ResConfigFlags.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResConfigFlags.class.getName());
 }

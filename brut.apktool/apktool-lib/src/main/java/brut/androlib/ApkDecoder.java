@@ -31,7 +31,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 import java.util.zip.ZipEntry;
 
 /**
@@ -396,16 +396,16 @@ public class ApkDecoder {
     {
         meta.put("uncompressExtensions", getmUncompressExtensions());
     }
-    
+
     private List<String> getmUncompressExtensions()
     {
         return mUncompressExtensions;
     }
-    
+
     private boolean isDefaultExtension(String ext)
     {
         boolean hasExtension = false;
-        
+
         String noCompressExtArray[] = {
                 ".jpg", ".jpeg", ".png", ".gif",
                 ".wav", ".mp2", ".mp3", ".ogg", ".aac",
@@ -414,7 +414,7 @@ public class ApkDecoder {
                 ".m4v", ".3gp", ".3gpp", ".3g2", ".3gpp2",
                 ".amr", ".awb", ".wma", ".wmv"
         };
-        
+
         for (String noCompressExt : noCompressExtArray)
         {
             if (noCompressExt.equals(ext))
@@ -423,44 +423,44 @@ public class ApkDecoder {
                 break;
             }
         }
-        
+
         return hasExtension;
     }
-    
+
     private List<String> getFilesExtensionsStored() throws IOException
     {
         boolean compressNoExtension = false;
-        
+
         boolean hasNoExtensionCompressed = false;
-        
+
         Set<String> noCompressExt = new HashSet<String>();
-        
+
         ZipExtFile zef = new ZipExtFile(mApkFile.getAbsolutePath());
-        
+
         Enumeration<ZipArchiveEntry> allFiles = zef.getEntries();
-        
+
         if (allFiles != null) {
-            
+
             while (allFiles.hasMoreElements())
             {
                 ZipArchiveEntry ze = allFiles.nextElement();
-                
+
                 String[] splitted = ze.getName().split("\\.");
-                
+
                 if (!ze.isDirectory() && ze.getMethod() == ZipEntry.STORED) // não comprimido
                 {
                     if (splitted.length > 1) // com extensão
                     {
                         String extension = "." + splitted[splitted.length-1];
-                        
+
                         if (!isDefaultExtension(extension))
                         {
                             noCompressExt.add(extension);
                         }
                     } else { // sem extensão
-                        
+
                         compressNoExtension = true;
-                        
+
                     }
                 } else if (ze.getMethod() == ZipEntry.DEFLATED) //comprimido
                 {
@@ -469,7 +469,7 @@ public class ApkDecoder {
                     }
                 }
             }
-            
+
             if (!hasNoExtensionCompressed) //se tiver arquivos sem extensão comprimidos
             {
                 if (compressNoExtension) //se tiver arquivos sem extensão não comprimidos
@@ -480,14 +480,14 @@ public class ApkDecoder {
                 }
             }
         }
-        
+
         zef.close();
-        
+
         return new ArrayList<String>(noCompressExt);
     }
     private final Androlib mAndrolib;
 
-    private final static Logger LOGGER = Logger.getLogger(Androlib.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(Androlib.class.getName());
 
     private ExtFile mApkFile;
     private File mOutDir;

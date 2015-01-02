@@ -19,7 +19,7 @@ package brut.androlib.res.decoder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -156,5 +156,5 @@ public class XmlPullStreamDecoder implements ResStreamDecoder {
     private final XmlPullParser mParser;
     private final ExtXmlSerializer mSerial;
 
-    private final static Logger LOGGER = Logger.getLogger(XmlPullStreamDecoder.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(XmlPullStreamDecoder.class.getName());
 }

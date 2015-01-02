@@ -26,8 +26,7 @@ import brut.directory.Directory;
 import brut.directory.DirectoryException;
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
@@ -81,9 +80,7 @@ public class ResFileDecoder {
                         decode(inDir, inFileName, outDir, outFileName, "9patch");
                         return;
                     } catch (CantFind9PatchChunk ex) {
-                        LOGGER.log(
-                                Level.WARNING,
-                                String.format(
+                        LOGGER.warn(String.format(
                                         "Cant find 9patch chunk in file: \"%s\". Renaming it to *.png.",
                                         inFileName), ex);
                         outDir.removeFile(outFileName);
@@ -98,7 +95,7 @@ public class ResFileDecoder {
 
             decode(inDir, inFileName, outDir, outFileName, "xml");
         } catch (AndrolibException ex) {
-            LOGGER.log(Level.SEVERE, String.format(
+            LOGGER.error(String.format(
                     "Could not decode file, replacing by FALSE value: %s",
                     inFileName, outFileName), ex);
             res.replace(new ResBoolValue(false, null));
@@ -137,5 +134,5 @@ public class ResFileDecoder {
         }
     }
 
-    private final static Logger LOGGER = Logger.getLogger(ResFileDecoder.class.getName());
+    private final static Logger LOGGER = LoggerFactory.getLogger(ResFileDecoder.class.getName());
 }
